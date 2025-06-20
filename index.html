@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great War: World War 1 Interactive Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #2c2c2c;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .timeline {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.4s; }
+        .section:nth-child(4) { animation-delay: 0.6s; }
+        .section:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section h2 {
+            color: #c0392b;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #c0392b;
+            padding-bottom: 10px;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border: 2px dashed #999;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .image-placeholder:hover {
+            background: linear-gradient(45deg, #e8e8e8, #d8d8d8);
+            transform: scale(1.02);
+        }
+
+        .flex-content {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .flex-content.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .text-content {
+            flex: 1;
+        }
+
+        .text-content p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(238, 90, 82, 0.3);
+        }
+
+        .highlight-box h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #4ecdc4, #45b7b8);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(69, 183, 184, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .interactive-map {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .country-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .country-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .country-btn:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            transform: scale(1.05);
+        }
+
+        .country-info {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .weapons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .weapon-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .weapon-card:hover {
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .flex-content {
+                flex-direction: column;
+            }
+            .flex-content.reverse {
+                flex-direction: column;
+            }
+            .header h1 {
+                font-size: 2.5em;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>The Great War</h1>
+            <p>World War 1: 1914-1918</p>
+        </div>
+
+        <div class="timeline">
+            <div class="section">
+                <h2>🔥 The Spark That Started It All</h2>
+                <div class="flex-content">
+                    <div class="text-content">
+                        <p>Imagine a single gunshot that changed the entire world forever. On June 28, 1914, Archduke Franz Ferdinand of Austria-Hungary was assassinated in Sarajevo by a Serbian nationalist named Gavrilo Princip. This wasn't just any murder - it was the match that lit the powder keg of Europe.</p>
+                        <p>Europe in 1914 was like a bunch of rival gangs, all armed to the teeth and looking for a fight. Countries had formed alliances - basically promising to back each other up in a fight. When Austria-Hungary declared war on Serbia, it was like dominoes falling: Russia backed Serbia, Germany backed Austria-Hungary, France backed Russia, and Britain backed France.</p>
+                    </div>
+                    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAH0AoADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD" alt="The Assassination of Archduke Franz Ferdinand" style="width: 100%; height: 300px; object-fit: cover; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" />
+                </div>
+                
+                <div class="highlight-box">
+                    <h3>⚡ Did You Know?</h3>
+                    <p>Gavrilo Princip was only 19 years old when he changed history! He was part of a secret group called the "Black Hand" that wanted to free Bosnia from Austrian rule. Talk about teenage rebellion taken to the extreme!</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🗺️ The Alliance System: Choose Your Side</h2>
+                <div class="interactive-map">
+                    <div class="image-placeholder">
+                        [IMAGE 2: Map of Europe in 1914 showing the alliance systems - Allied Powers in blue, Central Powers in red, neutral countries in gray]
+                    </div>
+                    <div class="country-buttons">
+                        <button class="country-btn" onclick="showCountryInfo('allies')">Allied Powers</button>
+                        <button class="country-btn" onclick="showCountryInfo('central')">Central Powers</button>
+                        <button class="country-btn" onclick="showCountryInfo('neutral')">Neutral Countries</button>
+                    </div>
+                    <div id="allies-info" class="country-info">
+                        <h3>The Allied Powers (The Entente)</h3>
+                        <p><strong>Main Players:</strong> Britain, France, Russia, Italy (joined 1915), United States (joined 1917)</p>
+                        <p><strong>Their Goal:</strong> Stop German and Austrian expansion, protect smaller nations</p>
+                        <p><strong>Advantages:</strong> Control of the seas, more resources, bigger population</p>
+                    </div>
+                    <div id="central-info" class="country-info">
+                        <h3>The Central Powers</h3>
+                        <p><strong>Main Players:</strong> Germany, Austria-Hungary, Ottoman Empire, Bulgaria</p>
+                        <p><strong>Their Goal:</strong> Expand territory, break the "encirclement" by enemies</p>
+                        <p><strong>Advantages:</strong> Better organized, superior military technology initially</p>
+                    </div>
+                    <div id="neutral-info" class="country-info">
+                        <h3>Neutral Countries</h3>
+                        <p><strong>Main Players:</strong> Spain, Netherlands, Switzerland, Scandinavian countries</p>
+                        <p><strong>Their Strategy:</strong> Stay out of the conflict, maintain trade with both sides</p>
+                        <p><strong>Challenge:</strong> Pressure from both sides to join the war</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚔️ New Weapons of War</h2>
+                <p>This wasn't your grandfather's war! WWI introduced terrifying new technologies that made it the deadliest conflict the world had ever seen.</p>
+                
+                <div class="weapons-grid">
+                    <div class="weapon-card">
+                        <div class="image-placeholder">
+                            [IMAGE 3: Poison gas attack scene - soldiers in gas masks in trenches with green/yellow gas clouds]
+                        </div>
+                        <h3>☠️ Poison Gas</h3>
+                        <p>Chlorine, mustard gas, and phosgene turned battlefields into death traps. Gas masks became as essential as helmets. The psychological terror was almost worse than the physical damage.</p>
+                    </div>
+                    <div class="weapon-card">
+                        <div class="image-placeholder">
+                            [IMAGE 4: Early WWI tank in action - British Mark I tank crossing trenches with soldiers]
+                        </div>
+                        <h3>🚗 Tanks</h3>
+                        <p>These "land ships" could cross trenches and barbed wire that stopped infantry. The British Mark I tank looked like a metal monster and scared the life out of enemy soldiers!</p>
+                    </div>
+                    <div class="weapon-card">
+                        <div class="image-placeholder">
+                            [IMAGE 5: WWI aircraft dogfight - biplanes engaged in aerial combat over battlefield]
+                        </div>
+                        <h3>✈️ Aircraft</h3>
+                        <p>Started as reconnaissance tools but quickly became fighters and bombers. Aces like the Red Baron became legends, fighting duels in the sky at 100 mph!</p>
+                    </div>
+                    <div class="weapon-card">
+                        <div class="image-placeholder">
+                            [IMAGE 6: German U-boat surfacing - submarine emerging from water with crew on deck]
+                        </div>
+                        <h3>🚢 Submarines</h3>
+                        <p>German U-boats could sink ships without warning, hiding beneath the waves. They nearly starved Britain into surrender by sinking supply ships!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🏕️ Life in the Trenches</h2>
+                <div class="flex-content reverse">
+                    <div class="text-content">
+                        <p>Forget everything you think you know about war from movies. The Western Front became a 400-mile-long line of trenches stretching from the North Sea to Switzerland. Imagine living in a muddy ditch for months, with rats, disease, and the constant threat of death.</p>
+                        <p>Soldiers faced "trench foot" from constantly wet conditions, lice infestations, and the psychological horror of "shell shock" (now called PTSD). The area between opposing trenches - "No Man's Land" - was a hellscape of barbed wire, craters, and corpses.</p>
+                        <p>Yet somehow, soldiers found ways to maintain hope. They wrote letters home, played cards, and even organized informal truces during holidays. The famous Christmas Truce of 1914 saw enemies playing football together in No Man's Land!</p>
+                    </div>
+                    <div class="image-placeholder">
+                        [IMAGE 7: Cross-section of WWI trenches - detailed cutaway showing trench system with soldiers, dugouts, and defensive positions]
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🏠 The Home Front</h2>
+                <div class="flex-content">
+                    <div class="text-content">
+                        <p>This was "total war" - everyone was involved, not just soldiers. Women entered factories to build weapons and ammunition, earning the nickname "Munitionettes." Food was rationed, and families grew "victory gardens" to feed themselves.</p>
+                        <p>Propaganda posters encouraged people to buy war bonds, save food, and support the troops. Children collected scrap metal, and even Hollywood stars sold war bonds. The entire society was mobilized for war.</p>
+                    </div>
+                    <div class="image-placeholder">
+                        [IMAGE 8: Women working in munitions factory - female workers in overalls operating machinery, building artillery shells]
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>👩‍🏭 Women's Revolution</h3>
+                    <p>WWI gave women unprecedented opportunities. They drove buses, worked in banks, served as police officers, and proved they could do "men's work." This experience helped fuel the women's suffrage movement - the fight for voting rights!</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📊 The Staggering Cost</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>17 Million</h3>
+                        <p>Total Deaths</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>21 Million</h3>
+                        <p>Wounded</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>$200 Billion</h3>
+                        <p>Cost (1918 dollars)</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>4 Years</h3>
+                        <p>Duration</p>
+                    </div>
+                </div>
+                
+                <div class="image-placeholder">
+                    [IMAGE 9: WWI memorial or cemetery - rows of white crosses or memorial wall with poppies, showing the scale of loss]
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📜 The End and Its Consequences</h2>
+                <div class="flex-content reverse">
+                    <div class="text-content">
+                        <p>By 1918, everyone was exhausted. The German spring offensive failed, American troops were arriving in huge numbers, and revolution was brewing in Germany. On November 11, 1918, at 11 AM, the guns finally fell silent.</p>
+                        <p>But the peace was harsh. The Treaty of Versailles blamed Germany for everything and demanded huge payments. This created resentment that would later help fuel World War II. The old empires - Austrian, Russian, Ottoman - collapsed, creating new countries and new problems.</p>
+                        <p>The world that emerged from WWI was fundamentally different. Old certainties were shattered, new technologies had been unleashed, and millions of families mourned their dead. It truly was "the war to end all wars" - except it wasn't.</p>
+                    </div>
+                    <div class="image-placeholder">
+                        [IMAGE 10: Signing of the Armistice - historical scene of military officials signing documents in a railway car]
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🌍 The World Changed Forever</h3>
+                    <p>WWI ended four empires, created new nations, gave women the vote in many countries, and set the stage for the Russian Revolution. It was the end of the old world and the birth of the modern age. Even today, we're still living with its consequences!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showCountryInfo(side) {
+            // Hide all info boxes
+            document.querySelectorAll('.country-info').forEach(info => {
+                info.style.display = 'none';
+            });
+            
+            // Show selected info
+            document.getElementById(side + '-info').style.display = 'block';
+        }
+
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.stat-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
